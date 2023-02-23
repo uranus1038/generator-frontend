@@ -1,0 +1,12 @@
+.umi-box-01
+{
+    width: 280px;
+    height: 280px;
+}
+
+.btn-special-bg-c0:hover
+{
+    background-color: #333f53;
+    padding: 8px;
+    border-radius: 8px;
+}
