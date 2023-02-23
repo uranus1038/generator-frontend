@@ -1,11 +1,11 @@
 import { useState } from 'react' ; 
 //Add Component
-import NavbarMain from '../components/navbarMainENG' ;
+import NavbarMain from '../components/navbarMainEN' ;
 export default function StartApp() {
   const [count, setCount] = useState(0)
   return (
-    <body>
+    <section>
      <NavbarMain />
-    </body>
+    </section>
   )
 }
