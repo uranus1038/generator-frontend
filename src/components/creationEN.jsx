@@ -5,40 +5,34 @@ import '../yumi_assets/navbar/navbar.css'
 import '../yumi_assets/umi-god-main.css'
 import '../yumi_assets/umi-special.css'
 export default function FormCreation() {
-    let email;
+    let email, namestar;
     const [isValidEmail, setIsValidEmail] = useState(false);
     // array check err
     let psuhErr = [];
-    const verifyEmail = () => {
+    const verify = (params, data, id) => {
         let status
-
         axios({
-            method: 'POST', url: 'http://localhost:8000/api/creation/verify-email',
+            method: 'POST', url: 'http://localhost:8000/api/creation/verify-' + params,
             data: {
-                email: email
+                data: data
             }
         }).then((respon) => {
             status = respon.data.statusMessage;
             console.log(status);
-            console.log(isValidEmail);
+
             if (isValidEmail)
-                if (status === "ok") {
-
-                    document.querySelector('#err-01').innerHTML = "#This email has already been used.";
-
-                }
-                // document.querySelector('input[name="email"]').style.outline = "pink solid 3px";
-                else document.querySelector('#err-01').innerHTML = "";
+                if (status === "ok")
+                    document.querySelector(id).innerHTML = "#Not available";
+                    // document.querySelector('input[name="email"]').style.outline = "pink solid 3px";
+                else verifyNameStar();
         }
         )
-
     }
     const isVlidEmail = async (event) => {
         const emailValue = event.target.value;
         // regular expression validate 
         const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-        await setIsValidEmail(emailRegex.test(emailValue));
-        await verifyEmail();
+        setIsValidEmail(emailRegex.test(emailValue));
     }
     // func check birthday
     const isValidDate = (dateString) => {
@@ -58,16 +52,13 @@ export default function FormCreation() {
         }
         return true;
     }
-    const OnValidator = () => {
-        const nametaglInput = document.getElementsByName("nametag")[0].value.length;
-        const userNameInput = document.getElementsByName("userName")[0].value.length;
-        const passWordInput = document.getElementsByName("userName")[0].value.length;
-        let birthdayInput = document.getElementsByName("birthday")[0].value;
-        if (!isValidEmail) {
-            psuhErr.push('err');
-        }
-
+    const verifyNameStar = () => {
+        const nameStarInput = document.getElementsByName("namestar")[0].value.length;
+        if (nameStarInput < 4 || nameStarInput > 12)
+            document.querySelector("#err-02").innerHTML = "#Enter 4-20 characters only.";
+        else document.querySelector("#err-02").innerHTML = "";
     }
+
 
     const navigation = useNavigate();
     return (
@@ -76,17 +67,24 @@ export default function FormCreation() {
                 <div className="umi-rows umi-justify-center mt-5">
                     <div className="umi-col ">
                         <p id="err-01" className="umi-form-label fw-normal f-momo fs-medium mt-2 " ></p>
-                        <input id="email"
+                        <input
                             value={email} onChange={(event) => {
                                 email = event.target.value;
                                 isVlidEmail(event);
+                                verify("email", email, "#err-01");
                             }}
                             className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter your email"
                             name="email" type="email" />
                         <p className="umi-form-label fw-normal f-shiro fs-medium mt-2">
                             *This name is used to display on the application.</p>
-                        <input className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter Name Star"
-                            name="nametag" type="text" />
+                        <p id="err-02" className="umi-form-label fw-normal f-momo fs-medium  " ></p>
+                        <input
+                            value={namestar} onChange={(event) => {
+                                namestar = event.target.value;
+                                verify("namestar", namestar, "#err-02");
+                            }}
+                            className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter Name Star"
+                            name="namestar" type="text" />
                         <input className=" umi-form-tx-outness-haiiro pl-2 mt-2" placeholder="Enter username"
                             name="userName" type="text" />
                         <input className=" umi-form-tx-outness-haiiro pl-2 mt-2" placeholder="Enter your password"
@@ -101,7 +99,7 @@ export default function FormCreation() {
                             onClick={() => { navigation("/") }} type="button"><i className="fas fa-caret-left">
                             </i> Back</button>
                         <button className="w-25 ml-2 btn umi-btn-sora umi-rounded-1"
-                            onClick={OnValidator} type="button">Next Register <i className="fas fa-caret-right">
+                            type="button">Next Register <i className="fas fa-caret-right">
                             </i></button>
                     </div>
                 </div>
