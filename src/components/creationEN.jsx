@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 import { Navigate, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import axios from 'axios';
@@ -6,51 +5,27 @@ import '../yumi_assets/navbar/navbar.css'
 import '../yumi_assets/umi-god-main.css'
 import '../yumi_assets/umi-special.css'
 export default function FormCreation() {
-    let email, namestar, userName, passWord;
-    const [isValidEmail, setIsValidEmail] = useState(false);
-    // array check err
-    let psuhErr = [];
-    const verify = (params, data, id) => {
-        let status
-       
-        axios({
-            method: 'POST', url: 'http://localhost:8000/api/creation/verify-' + params,
-            data: {
-                data: data
-            }
-        }).then((respon) => {
-            status = respon.data.statusMessage;
-            console.log(status);
-
-            if (isValidEmail) {
-                if (status === "ok")
-                    document.querySelector(id).innerHTML = "#Not available";
-                else if (id === "#err-01")
-                    document.querySelector(id).innerHTML = "";
-                // document.querySelector('input[name="email"]').style.outline = "pink solid 3px";
-            }
-            else {
-                if (status === "none" && id === "#err-01")
-                {
-                    document.querySelector(id).innerHTML = "#Invalid email format";
-                }
-                if (status === "ok")
-                    document.querySelector(id).innerHTML = "#Not available";
-                else if (id === "#err-02") verifyNameStar();
-                else if (id === "#err-03") verifyUserStar();
-            }
-
-        }
-        )
-    }
-    const isVlidEmail = async (event) => {
-        const emailValue = event.target.value;
-        // regular expression validate 
-        const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-        setIsValidEmail(emailRegex.test(emailValue));
+    let gender;
+    const [email, setEmail] = useState('');
+    const [userName, setUserName] = useState('');
+    const [nameStar, setNameStar] = useState('');
+    const [passWord, setPassWord] = useState('');
+    const [birthday, setBirthday] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [nameError, setNameError] = useState('');
+    const [userNameError, setuserNameError] = useState('');
+    const [passWordError, setpassWordError] = useState('');
+    const [birthdayError, setBirthdayError] = useState('');
+    const [error, setError] = useState('');
+    const [isEmailValidate, setIsEmailValidate] = useState(false);
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value);
+        //regular expression validate email
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        setIsEmailValidate(emailRegex.test(event.target.value));
     }
     // func check birthday
-    const isValidDate = (dateString) => {
+    const validDate = (dateString) => {
         // regular expression validate 
         let regex = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
         if (!regex.test(dateString)) {
@@ -67,83 +42,116 @@ export default function FormCreation() {
         }
         return true;
     }
-    const verifyNameStar = () => {
-        const starInput = document.getElementsByName("namestar")[0].value.length;
-        if (starInput < 4 || starInput > 12)
-            document.querySelector("#err-02").innerHTML = "#Enter 4-12 characters only.";
-        else document.querySelector("#err-02").innerHTML = "";
-        if (starInput === 0)
-            document.querySelector("#err-02").innerHTML = "";
+    // check length Name
+    const handlenameStarChange = () => {
+        const starInput = document.getElementsByName("nameStar")[0].value.length  ;
+        if (starInput < 4 || starInput > 10) setNameError('nameStar must be between 4-12 characters');
+        else setNameError('');
+    }
+    // check length User
+    const handleuserNameChange = () => {
+        const usernameInput = document.getElementsByName("userName")[0].value.length  ;
+        if (usernameInput < 4 || usernameInput > 18) setuserNameError('Username must be between 4-20 characters');
+        else setuserNameError('');
+    }
+    // check length passWord
+    const handlepassWordChange = () => {
+        const passWordInput = passWord.length;
+        if (passWordInput < 8) setpassWordError('passWord must be at least 8 characters');
+        else setpassWordError('');
 
     }
-    const verifyUserStar = () => {
-        const starInput = document.getElementsByName("userName")[0].value.length;
-        if (starInput < 4 || starInput > 20)
-            document.querySelector("#err-03").innerHTML = "#Enter 4-20 characters only.";
-        else document.querySelector("#err-03").innerHTML = "";
-        if (starInput === 0)
-            document.querySelector("#err-03").innerHTML = "";
+    // check length Birthday
+    const handlebirthdayChang = () => {
+        const birthday = document.getElementsByName("birthday")[0].value  ;
+        if (!validDate(birthday)) {
+            setBirthdayError('Please enter a valid date in the format dd/mm/yyyy');
+        } else {
+            setBirthdayError('');
+        }
     }
-    const verifyPassWord = () => {
-        const starInput = document.getElementsByName("passWord")[0].value.length;
-        if (starInput < 8)
-            document.querySelector("#err-04").innerHTML = "#Enter 8 or more characters.";
-        else document.querySelector("#err-04").innerHTML = "";
-        if (starInput === 0)
-            document.querySelector("#err-04").innerHTML = "";
+    const OnSubmit = async (event) => {
+        event.preventDefault();
+        // array check err
+        let pushErr = [];
+        gender = document.getElementsByName('gender')[0].value;
+        if (!isEmailValidate)  pushErr.push("err");
+        if (nameStar.length > 12 || nameStar.length < 4) pushErr.push("err");
+        if (userName.length > 20 || userName.length < 4) pushErr.push("err");
+        if (passWord.length < 8) pushErr.push("err");
+        if (!validDate(birthday)) pushErr.push("err");
+        if (pushErr.length === 0) {
+            await axios.post("http://localhost:8000/api/creation/submit", {
+                email: email,
+                nametag: nameStar,
+                userName: userName,
+                passWord: passWord,
+                birthday: birthday,
+                gender: gender
+            }).then(respon => {
+                console.log(respon.data.status);
+            })
+        }
+
     }
-
-
     const navigation = useNavigate();
     return (
         <section>
-            <form action="POST" className="umi-form-control">
+            <form className="umi-form-control">
                 <div className="umi-rows umi-justify-center mt-5">
                     <div className="umi-col ">
-                        <p id="err-01" className="umi-form-label fw-normal f-momo fs-medium mt-2 " ></p>
-                        <input
-                            value={email} onChange={(event) => {
-                                email = event.target.value;
-                                isVlidEmail(event);
-                                verify("email", email, "#err-01");
+                        <p className="umi-form-label fw-normal f-momo fs-medium mt-2 " >{emailError}</p>
+                        <input 
+                            onChange={(event) => {
+                                setEmail(event.target.value);
+                                handleEmailChange(event);
                             }}
                             className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter your email"
-                            name="email" type="email"  />
+                            name="email" type="email" required />
                         <p className="umi-form-label fw-normal f-shiro fs-medium mt-2">
                             *This name is used to display on the application.</p>
-                        <p id="err-02" className="umi-form-label fw-normal f-momo fs-medium  " ></p>
-                        <input
-                            value={namestar} onChange={(event) => {
-                                namestar = event.target.value;
-                                verify("namestar", namestar, "#err-02");
+                        <p className="umi-form-label fw-normal f-momo fs-medium  " >{nameError}</p>
+                        <input 
+                            onChange={(event) => {
+                                setNameStar(event.target.value);
+                                handlenameStarChange();
                             }}
                             className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter Name Star"
-                            name="namestar" type="text" pattern="[a-zA-Z]+" required/>
-                        <p id="err-03" className="umi-form-label fw-normal f-momo fs-medium  mt-1 " ></p>
-                        <input value={userName} onChange={(event) => {
-                            userName = event.target.value;
-                            verify("userstar", userName, "#err-03");
-                        }}
+                            name="nameStar" type="text" pattern="[a-zA-Z]+" required />
+                        <p className="umi-form-label fw-normal f-momo fs-medium  mt-1 " >{userNameError}</p>
+                        <input
+                            onChange={(event) => {
+                                setUserName(event.target.value);
+                                handleuserNameChange();
+                            }}
                             className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter username"
-                            name="userName" type="text" pattern="[a-zA-Z0-9]+" required/>
-                        <p id="err-04" className="umi-form-label fw-normal f-momo fs-medium  mt-1 " ></p>
-                        <input value={passWord} onChange={(event) => {
-                            passWord = event.target.value;
-                            verifyPassWord();
-                        }}
-                            className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter your password"
-                            name="passWord" type="password" pattern="[a-zA-Z0-9]+" required/>
-                        <input className=" umi-form-tx-outness-haiiro pl-2 mt-2 mr-2" value="01/01/2023"
-                            name="birthday" type="text" />
-                        <select name="gender" className="pl-2 umi-form-selector mt-2 umi-form-tx-outness-haiiro mb-2" >
+                            name="userName" type="text" pattern="[a-zA-Z0-9]+" required />
+                        <p className="umi-form-label fw-normal f-momo fs-medium  mt-1 " >{passWordError}</p>
+                        <input
+                            value={passWord} onChange={(event) => {
+                                setPassWord(event.target.value);
+                                handlepassWordChange();
+                            }}
+                            className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter your passWord"
+                            name="passWord" type="passWord" pattern="[a-zA-Z0-9]+" required />
+                        <p className="umi-form-label fw-normal f-momo fs-medium  mt-1 " >{birthdayError}</p>
+                        <input
+                            onChange={(event) => {
+                                setBirthday(event.target.value);
+                                handlebirthdayChang();
+                            }} placeholder="01/01/2023"
+                            className=" umi-form-tx-outness-haiiro pl-2 mt-1 mr-2"
+                            name="birthday" type="text" required />
+                        <select
+                            name="gender" className="pl-2 umi-form-selector mt-2 umi-form-tx-outness-haiiro mb-1" required>
                             <option className="p-3 f-dark-blue" value="male">Male</option>
-                            <option className="f-dark-blue" value="female">Female</option>
+                            <option className="f-dark-blue" value="female" selected>Female</option>
                         </select>
-                        <button className="w-25  btn umi-btn-sora umi-rounded-1 umi--sora"
+                        <button className="w-25 mt-1  btn umi-btn-sora umi-rounded-1 umi--sora"
                             onClick={() => { navigation("/") }} type="button"><i className="fas fa-caret-left">
                             </i> Back</button>
-                        <button className="w-25 ml-2 btn umi-btn-sora umi-rounded-1"
-                            type="submit">Next Register <i className="fas fa-caret-right">
+                        <button id="btn-next" onClick={OnSubmit} className="w-25 ml-2 mt-1 btn umi-btn-sora umi-rounded-1"
+                            type="button">Next Register <i className="fas fa-caret-right">
                             </i></button>
                     </div>
                 </div>

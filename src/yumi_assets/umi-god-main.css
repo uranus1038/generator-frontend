@@ -478,6 +478,16 @@ input:-webkit-autofill {
 {
     width: 100%;
 }
+/* Alert-main */
+.umi-alert-momo
+{
+    width: 100%;
+    background-color: pink;
+    border-radius: 3px;
+    padding: 8px;
+}
+
+
 /* Media query  */
 
 /* ?_query  */
