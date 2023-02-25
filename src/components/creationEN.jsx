@@ -89,7 +89,17 @@ export default function FormCreation() {
                 birthday: birthday,
                 gender: gender
             }).then(respon => {
-                console.log(respon.data.status);
+                let status = respon.data.status ; 
+                if(status === "email-active")
+                {
+                    setEmailError("#This email is already in use.!");
+                }else if(status === "name-active")
+                {
+                    setuserNameError("#This username is already in use.!");
+                }else if(status === "successed")
+                {
+                    return  window.location.replace('/');
+                }
             })
         }
 
