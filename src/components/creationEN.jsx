@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 import { Navigate, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import axios from 'axios';
@@ -5,12 +6,13 @@ import '../yumi_assets/navbar/navbar.css'
 import '../yumi_assets/umi-god-main.css'
 import '../yumi_assets/umi-special.css'
 export default function FormCreation() {
-    let email, namestar;
+    let email, namestar, userName, passWord;
     const [isValidEmail, setIsValidEmail] = useState(false);
     // array check err
     let psuhErr = [];
     const verify = (params, data, id) => {
         let status
+       
         axios({
             method: 'POST', url: 'http://localhost:8000/api/creation/verify-' + params,
             data: {
@@ -20,11 +22,24 @@ export default function FormCreation() {
             status = respon.data.statusMessage;
             console.log(status);
 
-            if (isValidEmail)
+            if (isValidEmail) {
                 if (status === "ok")
                     document.querySelector(id).innerHTML = "#Not available";
-                    // document.querySelector('input[name="email"]').style.outline = "pink solid 3px";
-                else verifyNameStar();
+                else if (id === "#err-01")
+                    document.querySelector(id).innerHTML = "";
+                // document.querySelector('input[name="email"]').style.outline = "pink solid 3px";
+            }
+            else {
+                if (status === "none" && id === "#err-01")
+                {
+                    document.querySelector(id).innerHTML = "#Invalid email format";
+                }
+                if (status === "ok")
+                    document.querySelector(id).innerHTML = "#Not available";
+                else if (id === "#err-02") verifyNameStar();
+                else if (id === "#err-03") verifyUserStar();
+            }
+
         }
         )
     }
@@ -53,17 +68,36 @@ export default function FormCreation() {
         return true;
     }
     const verifyNameStar = () => {
-        const nameStarInput = document.getElementsByName("namestar")[0].value.length;
-        if (nameStarInput < 4 || nameStarInput > 12)
-            document.querySelector("#err-02").innerHTML = "#Enter 4-20 characters only.";
+        const starInput = document.getElementsByName("namestar")[0].value.length;
+        if (starInput < 4 || starInput > 12)
+            document.querySelector("#err-02").innerHTML = "#Enter 4-12 characters only.";
         else document.querySelector("#err-02").innerHTML = "";
+        if (starInput === 0)
+            document.querySelector("#err-02").innerHTML = "";
+
+    }
+    const verifyUserStar = () => {
+        const starInput = document.getElementsByName("userName")[0].value.length;
+        if (starInput < 4 || starInput > 20)
+            document.querySelector("#err-03").innerHTML = "#Enter 4-20 characters only.";
+        else document.querySelector("#err-03").innerHTML = "";
+        if (starInput === 0)
+            document.querySelector("#err-03").innerHTML = "";
+    }
+    const verifyPassWord = () => {
+        const starInput = document.getElementsByName("passWord")[0].value.length;
+        if (starInput < 8)
+            document.querySelector("#err-04").innerHTML = "#Enter 8 or more characters.";
+        else document.querySelector("#err-04").innerHTML = "";
+        if (starInput === 0)
+            document.querySelector("#err-04").innerHTML = "";
     }
 
 
     const navigation = useNavigate();
     return (
         <section>
-            <form className="umi-form-control">
+            <form action="POST" className="umi-form-control">
                 <div className="umi-rows umi-justify-center mt-5">
                     <div className="umi-col ">
                         <p id="err-01" className="umi-form-label fw-normal f-momo fs-medium mt-2 " ></p>
@@ -74,7 +108,7 @@ export default function FormCreation() {
                                 verify("email", email, "#err-01");
                             }}
                             className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter your email"
-                            name="email" type="email" />
+                            name="email" type="email"  />
                         <p className="umi-form-label fw-normal f-shiro fs-medium mt-2">
                             *This name is used to display on the application.</p>
                         <p id="err-02" className="umi-form-label fw-normal f-momo fs-medium  " ></p>
@@ -84,11 +118,21 @@ export default function FormCreation() {
                                 verify("namestar", namestar, "#err-02");
                             }}
                             className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter Name Star"
-                            name="namestar" type="text" />
-                        <input className=" umi-form-tx-outness-haiiro pl-2 mt-2" placeholder="Enter username"
-                            name="userName" type="text" />
-                        <input className=" umi-form-tx-outness-haiiro pl-2 mt-2" placeholder="Enter your password"
-                            name="passWord" type="password" />
+                            name="namestar" type="text" pattern="[a-zA-Z]+" required/>
+                        <p id="err-03" className="umi-form-label fw-normal f-momo fs-medium  mt-1 " ></p>
+                        <input value={userName} onChange={(event) => {
+                            userName = event.target.value;
+                            verify("userstar", userName, "#err-03");
+                        }}
+                            className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter username"
+                            name="userName" type="text" pattern="[a-zA-Z0-9]+" required/>
+                        <p id="err-04" className="umi-form-label fw-normal f-momo fs-medium  mt-1 " ></p>
+                        <input value={passWord} onChange={(event) => {
+                            passWord = event.target.value;
+                            verifyPassWord();
+                        }}
+                            className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter your password"
+                            name="passWord" type="password" pattern="[a-zA-Z0-9]+" required/>
                         <input className=" umi-form-tx-outness-haiiro pl-2 mt-2 mr-2" value="01/01/2023"
                             name="birthday" type="text" />
                         <select name="gender" className="pl-2 umi-form-selector mt-2 umi-form-tx-outness-haiiro mb-2" >
@@ -99,7 +143,7 @@ export default function FormCreation() {
                             onClick={() => { navigation("/") }} type="button"><i className="fas fa-caret-left">
                             </i> Back</button>
                         <button className="w-25 ml-2 btn umi-btn-sora umi-rounded-1"
-                            type="button">Next Register <i className="fas fa-caret-right">
+                            type="submit">Next Register <i className="fas fa-caret-right">
                             </i></button>
                     </div>
                 </div>
