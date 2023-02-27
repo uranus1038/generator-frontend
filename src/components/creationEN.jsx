@@ -160,7 +160,7 @@ export default function FormCreation() {
                         <button className="w-25 mt-1  btn umi-btn-sora umi-rounded-1 umi--sora"
                             onClick={() => { navigation("/") }} type="button"><i className="fas fa-caret-left">
                             </i> Back</button>
-                        <button id="btn-next" onClick={OnSubmit} className="w-25 ml-2 mt-1 btn umi-btn-sora umi-rounded-1"
+                        <button id="btn-next" onClick={OnSubmit} className=" w-35 ml-2 mt-1 btn umi-btn-sora umi-rounded-1"
                             type="button">Next Register <i className="fas fa-caret-right">
                             </i></button>
                     </div>

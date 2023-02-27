@@ -255,7 +255,6 @@ body {
 {
     background: none;
     border: white 3px solid;
-    margin: 0px ;
     border-radius: 12%;
 }
 .umi-btn-square
@@ -466,6 +465,10 @@ input:-webkit-autofill {
 {
     width: 25%;
 }
+.w-35
+{
+    width: 35%;
+}
 .w-50
 {
     width: 50%;
@@ -492,10 +495,11 @@ input:-webkit-autofill {
 
 /* ?_query  */
 
-@media(max-width:786)
+@media(max-width:786px)
 {
   .umi-container
   {
     padding: 0%;
   }
+  
 }
