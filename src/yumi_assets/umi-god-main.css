@@ -106,6 +106,7 @@ body {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+   
 }
 .umi-rows-6
 {
@@ -497,9 +498,14 @@ input:-webkit-autofill {
 
 @media(max-width:786px)
 {
-  .umi-container
+  .umi-rows-s
   {
-    padding: 0%;
+    width: auto;
+    margin: auto 2%;
+  }
+  .w-35-s
+  {
+    width: 50%;
   }
   
 }

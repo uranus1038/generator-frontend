@@ -108,7 +108,7 @@ export default function FormCreation() {
     return (
         <section>
             <form className="umi-form-control">
-                <div className="umi-rows umi-justify-center mt-5">
+                <div className="umi-rows umi-rows-s umi-justify-center ">
                     <div className="umi-col ">
                         <p className="umi-form-label fw-normal f-momo fs-medium mt-2 " >{emailError}</p>
                         <input 
@@ -160,7 +160,7 @@ export default function FormCreation() {
                         <button className="w-25 mt-1  btn umi-btn-sora umi-rounded-1 umi--sora"
                             onClick={() => { navigation("/") }} type="button"><i className="fas fa-caret-left">
                             </i> Back</button>
-                        <button id="btn-next" onClick={OnSubmit} className=" w-35 ml-2 mt-1 btn umi-btn-sora umi-rounded-1"
+                        <button id="btn-next" onClick={OnSubmit} className=" w-35 w-35-s ml-2 mt-1 btn umi-btn-sora umi-rounded-1"
                             type="button">Next Register <i className="fas fa-caret-right">
                             </i></button>
                     </div>
