@@ -6,7 +6,6 @@ export default function StartApp() {
   return (
     <section>
      <NavbarMain />
-     <NavbarMain /> 
      {/* test */}
     </section>
   )
