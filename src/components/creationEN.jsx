@@ -126,7 +126,7 @@ export default function FormCreation() {
                                 setNameStar(event.target.value);
                                 handlenameStarChange();
                             }}
-                            className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter Name Star"
+                            className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter name star"
                             name="nameStar" type="text" pattern="[a-zA-Z]+" required />
                         <p className="umi-form-label fw-normal f-momo fs-medium  mt-1 " >{userNameError}</p>
                         <input
@@ -142,7 +142,7 @@ export default function FormCreation() {
                                 setPassWord(event.target.value);
                                 handlepassWordChange();
                             }}
-                            className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter your passWord"
+                            className=" umi-form-tx-outness-haiiro pl-2 mt-1" placeholder="Enter your password"
                             name="passWord" type="passWord" pattern="[a-zA-Z0-9]+" required />
                         <p className="umi-form-label fw-normal f-momo fs-medium  mt-1 " >{birthdayError}</p>
                         <input

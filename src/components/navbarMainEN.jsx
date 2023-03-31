@@ -23,7 +23,10 @@ export default function NavbarMain() {
                                 <li>
                                     <button class="fw-bolder btn btn-none fw-bloder umi-nav-item umi-dropdown f-shiro umi-active"><i className="fas fa-user-alt"></i>  Accout <i className="fas fa-sort-down"></i></button>
                                     <div style={{ margin: "0px -28px" }} class="fw-bolder  umi-dropdown-content umi-special-blue-c1">
-                                        <button class="btn btn-none umi-dropdown-link f-shiro umi-active"><i className="far fa-user-circle"></i> Log In</button>
+                                        <button onClick={() => {
+                                            navigation("/en/login");
+                                        }}
+                                        class="btn btn-none umi-dropdown-link f-shiro umi-active"><i className="far fa-user-circle"></i> Log In</button>
                                         <button onClick={() => {
                                             navigation("/en/creation");
                                         }}

@@ -491,6 +491,12 @@ input:-webkit-autofill {
     padding: 8px;
 }
 
+/* line-main */
+.umi-underline  
+{
+    text-decoration: underline;
+}
+
 
 /* Media query  */
 
